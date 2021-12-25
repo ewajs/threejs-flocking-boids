@@ -23,16 +23,12 @@ bgTexture.mapping = THREE.EquirectangularReflectionMapping;
 scene.background = bgTexture;
 
 // Boids
-const boid = new Boid();
-scene.add(boid.getBoidObject());
+const BOID_NUMBER = 100;
+const flock = [];
 
-// Lights
+for (let i = 0; i < BOID_NUMBER; i++) flock.push(new Boid());
 
-const pointLight = new THREE.PointLight(0xffffff, 0.1);
-pointLight.position.x = 2;
-pointLight.position.y = 3;
-pointLight.position.z = 4;
-scene.add(pointLight);
+flock.forEach((boid) => scene.add(boid.getBoidObject()));
 
 /**
  * Sizes
@@ -67,8 +63,8 @@ const camera = new THREE.PerspectiveCamera(
   100
 );
 camera.position.x = 0;
-camera.position.y = 0;
-camera.position.z = 2;
+camera.position.y = 2.5;
+camera.position.z = -10;
 scene.add(camera);
 
 // Controls
@@ -95,6 +91,8 @@ const tick = () => {
 
   // Update Orbital Controls
   controls.update();
+
+  flock.forEach((boid) => boid.update(flock));
 
   // Render
   renderer.render(scene, camera);
